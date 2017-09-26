@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>IO Chat</title>
+	<link rel = "stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+	<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<link type="text/css" rel="stylesheet" href="css/style.css"/>
+	<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+	<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+</head>
+<body>
+	<div id="windowArea">
+		<div id="TitleDiv">
+			<h3>Piano Online</h3>	
+		</div>
+		<div id="userFormArea">
+			<form id="userForm">
+				<div class="form-group">
+					<label id="labelEnterUserName">Enter UserName</label>
+					<input class="form-control" id="username"/>
+					<br/>
+					<input type="submit" class="btn btn-primary" value="Login" />
+				</div>
+			</form>
+		</div>
+
+		<div id="mainArea" class="row">
+			<div id="pianoArea" class="col-md-9">
+				<div id="pianoheader" class="col-md-12">
+					<h3 class="col-md-11">Piano</h3>
+					<div id="pianotogglebuttondiv" class="col-md-1">
+						<input id="pianotogglebutton" type="checkbox" checked data-toggle="toggle" data-onstyle="default">
+					</div>
+				</div>
+				<div id="pianodiv" class="col-md-12">
+					<div id="pedaldiv" class="extrasetting">
+						<p id='sustaintext'>Sustain Off (Space)</p>
+					</div>
+					<div id="harmonydiv" class="extrasetting">
+						<p id='harmonytext'>Harmony Off (Shift)</p>
+					</div>
+					<ul class="piano">
+						<li class="key">
+							<span class="white-key" data-key="81" data-note="10-2C"><p>Q</p></span>
+							<span class="black-key" data-key="50" data-note="11-2Cs"><p>2</p></span>
+						</li>
+						<li class="key">
+							<span class="white-key" data-key="87" data-note="12-2D"><p>W</p></span>
+							<span class="black-key" data-key="51" data-note="13-2Ds"><p>3</p></span>
+						</li>
+						<li class="key">
+							<span class="white-key" data-key="69" data-note="14-2E"><p>E</p></span>
+						</li>
+						<li class="key">
+							<span class="white-key" data-key="82" data-note="15-2F"><p>R</p></span>
+							<span class="black-key" data-key="53" data-note="16-2Fs"><p>5</p></span>
+						</li>
+						<li class="key">
+							<span class="white-key" data-key="84" data-note="17-2G"><p>T</p></span>
+							<span class="black-key" data-key="54" data-note="18-2Gs"><p>6</p></span>
+						</li>
+						<li class="key">
+							<span class="white-key" data-key="89" data-note="19-2A"><p>Y</p></span>
+							<span class="black-key" data-key="55" data-note="20-2As"><p>7</p></span>
+						</li>
+						<li class="key">
+							<span class="white-key" data-key="85" data-note="21-2B"><p>U</p></span>
+						</li>
+						<li class="key">
+							<span class="white-key" data-key="73" data-note="22-3C"><p>I</p></span>
+							<span class="black-key" data-key="57" data-note="23-3Cs"><p>9</p></span>
+						</li>
+						<li class="key">
+							<span class="white-key" data-key="79" data-note="24-3D"><p>O</p></span>
+							<span class="black-key" data-key="48" data-note="25-3Ds"><p>0</p></span>
+						</li>
+						<li class="key">
+							<span class="white-key" data-key="80" data-note="26-3E"><p>P</p></span>
+						</li>
+						<li class="key">
+							<span class="white-key" data-key="90" data-note="27-3F"><p>Z</p></span>
+							<span class="black-key" data-key="83" data-note="28-3Fs"><p>S</p></span>
+						</li>
+						<li class="key">
+							<span class="white-key" data-key="88" data-note="29-3G"><p>X</p></span>
+							<span class="black-key" data-key="68" data-note="30-3Gs"><p>D</p></span>
+						</li>
+						<li class="key">
+							<span class="white-key" data-key="67" data-note="31-3A"><p>C</p></span>
+							<span class="black-key" data-key="70" data-note="32-3As"><p>F</p></span>
+						</li>
+						<li class="key">
+							<span class="white-key" data-key="86" data-note="33-3B"><p>V</p></span>
+						</li>
+						<li class="key">
+							<span class="white-key" data-key="66" data-note="34-4C"><p>B</p></span>
+							<span class="black-key" data-key="72" data-note="35-4Cs"><p>H</p></span>
+						</li>
+						<li class="key">
+							<span class="white-key" data-key="78" data-note="36-4D"><p>N</p></span>
+							<span class="black-key" data-key="74" data-note="37-4Ds"><p>J</p></span>
+						</li>
+						<li class="key">
+							<span class="white-key" data-key="77" data-note="38-4E"><p>M</p></span>
+						</li>
+					</ul>
+				</div>
+				<div id="chorddiv" class="col-md-4 chordcontainer">
+					<div id="chordheader" class="col-md-12">
+						<h3>Chord</h3>
+						<div class="chordtoggleheaderbuttondiv">
+							<input class="chordtogglebutton" checked type="checkbox" data-toggle="toggle" data-onstyle="default">
+						</div>
+					</div>
+					<div id="chordtable" class="col-md-12">
+						<hr style="margin: 1% 0; border-color: black" />
+						<div>
+							<h4>BPM: </h4>
+							<h4 id="bpmtext">110</h4>
+							<h4 id="bpmspeed">Moderato</h4>
+							<div class="chordtogglesliderdiv">
+								<input type="range" id="chordslider" value="110" min="40" max="218">
+							</div>
+						</div>
+						<div>
+							<h4>Triads</h4>
+							<div class="chordtogglebuttondiv">
+								<input class="chordtoggletablebutton" type="checkbox" data-toggle="toggle" data-onstyle="default" data-chord="Triads">
+							</div>
+						</div>
+						<div>
+							<h4>Arpegio</h4>
+							<div class="chordtogglebuttondiv">
+								<input class="chordtoggletablebutton" type="checkbox" data-toggle="toggle" data-onstyle="default" data-chord="Arpegio">
+							</div>
+						</div>
+						<div>
+							<h4>Waltz</h4>
+							<div class="chordtogglebuttondiv">
+								<input class="chordtoggletablebutton" type="checkbox" data-toggle="toggle" data-onstyle="default" data-chord="Waltz">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div id="messageArea" class="col-md-3">
+				<div class="col-md-12 msgcol">
+					<div class="well" id="OnlineUserDiv">
+						<h3>Online Users</h3>
+						<div id="UserListDiv">
+							<ul class="list-group" id="users"></ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-12 msgcol">
+					<div class="chat rounded" id="chat"></div>
+					<div id="messageFormDiv col-md-12">
+						<form id="messageForm">
+							<div class="form-group row">
+								<label class="col-md-12">Enter Message</label>
+								<div class="col-md-9 messageDiv">
+									<textarea class="form-control" id="message"></textarea>
+								</div>
+								<div class="col-md-3 messageDiv">
+									<input type="submit" class="btn btn-primary" value="Send" />
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="js/app.js"></script>
+</body>
+</html>
