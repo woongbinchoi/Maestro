@@ -26,7 +26,9 @@ $(function(){
 	var myUserName;
 	var chordBPM = 110;
 	var chordType = false;
+	var isChordOn = true;
 	var whoIsPlayingChord;
+	var intervalArr = [];
 
 	$messageForm.submit(function(e){
 		e.preventDefault();
@@ -101,9 +103,13 @@ $(function(){
 	}
 
 	function clearAllIntervals() {
-		for(i=1; i<= 1000; i++) {
-			window.clearInterval(i);
+		console.log("clearAllIntervals called.");
+		console.log(intervalArr);
+		for(i = 0; i < intervalArr.length; ++i) {
+			console.log("interval is about to be cleared. : " + intervalArr[i]);
+			clearInterval(intervalArr[i]);
 		}
+		intervalArr = []
 	}
 
 	function playnote(note, username, sustain, harmony, chord, bpm) {
@@ -137,7 +143,7 @@ $(function(){
 				noteaudio.play();
 				harmonyaudio1.play();
 				harmonyaudio2.play();
-				setInterval(function() {
+				intervalid1 = window.setInterval(function() {
 					noteaudio.currentTime = 0;
 					harmonyaudio1.currentTime = 0;
 					harmonyaudio2.currentTime = 0;
@@ -145,52 +151,58 @@ $(function(){
 					harmonyaudio1.play();
 					harmonyaudio2.play();
 				}, bpmtime * 4);
+				intervalArr.push(intervalid1)
 
 			} else if (chord == "Arpegio") {
 				noteaudio.play();
 
-				setInterval(function(){
+				intervalid2 = window.setInterval(function(){
 					noteaudio.currentTime = 0;
 					noteaudio.play();
 				}, bpmtime * 4);
+				intervalArr.push(intervalid2)
 
 				setTimeout(function(){
 					harmonyaudio1.currentTime = 0;
 					harmonyaudio1.play();
-					Interval3 = setInterval(function(){
+					intervalid3 = window.setInterval(function(){
 						harmonyaudio1.currentTime = 0;
 						harmonyaudio1.play();
 					}, bpmtime * 2);
+					intervalArr.push(intervalid3)
 				}, bpmtime);
 
 				setTimeout(function(){
 					harmonyaudio2.currentTime = 0;
 					harmonyaudio2.play();
-					setInterval(function(){
+					intervalid4 = window.setInterval(function(){
 						harmonyaudio2.currentTime = 0;
 						harmonyaudio2.play();
 					}, bpmtime * 4);
+					intervalArr.push(intervalid4)
 				}, bpmtime * 2);
 
 			} else if (chord == "Waltz") {
 				noteaudio.play();
 
-				setInterval(function(){
+				intervalid5 = window.setInterval(function(){
 					noteaudio.currentTime = 0;
 					noteaudio.play();
 				}, bpmtime * 3);
+				intervalArr.push(intervalid5)
 
 				setTimeout(function(){
 					harmonyaudio1.currentTime = 0;
 					harmonyaudio2.currentTime = 0;
 					harmonyaudio1.play();
 					harmonyaudio2.play();
-					setInterval(function(){
+					intervalid6 = window.setInterval(function(){
 						harmonyaudio1.currentTime = 0;
 						harmonyaudio2.currentTime = 0;
 						harmonyaudio1.play();
 						harmonyaudio2.play();
 					}, bpmtime * 3);
+					intervalArr.push(intervalid6)
 				}, bpmtime);
 
 				setTimeout(function(){
@@ -200,7 +212,7 @@ $(function(){
 					harmonyaudio2.play();
 					noteaudio.currentTime = 0;
 					noteaudio.play();
-					setInterval(function(){
+					intervalid7 = window.setInterval(function(){
 						harmonyaudio1.currentTime = 0;
 						harmonyaudio2.currentTime = 0;
 						harmonyaudio1.play();
@@ -208,6 +220,7 @@ $(function(){
 						noteaudio.currentTime = 0;
 						noteaudio.play();
 					}, bpmtime * 3);
+					intervalArr.push(intervalid7)
 				}, bpmtime * 2);
 			}
 		} else {
@@ -238,8 +251,9 @@ $(function(){
 	$piano.on('mousedown', 'span', function(event){
 		var me = $(this);
 		var datanote = me.attr('data-note');
-		socket.emit('playpianonote', {key: datanote, sustain: IsSustainOn, harmony: IsHarmonyOn, chord: chordType, chordbpm: chordBPM});
-		playnote(datanote, myUserName, IsSustainOn, IsHarmonyOn, chordType, chordBPM);
+		var ct = isChordOn ? chordType : false;
+		socket.emit('playpianonote', {key: datanote, sustain: IsSustainOn, harmony: IsHarmonyOn, chord: ct, chordbpm: chordBPM});
+		playnote(datanote, myUserName, IsSustainOn, IsHarmonyOn, ct, chordBPM);
 	});
 
 	$pedaldiv.on('click', function(event) {
@@ -277,8 +291,9 @@ $(function(){
 			if (datanote) {
 				if (event.type == 'keydown') {
 					if (!$pressedkey.hasClass('active')) {
-						socket.emit('playpianonote', {key: datanote, sustain: IsSustainOn, harmony: IsHarmonyOn, chord: chordType, chordbpm: chordBPM});
-						playnote(datanote, myUserName, IsSustainOn, IsHarmonyOn, chordType, chordBPM);
+						var ct = isChordOn ? chordType : false;
+						socket.emit('playpianonote', {key: datanote, sustain: IsSustainOn, harmony: IsHarmonyOn, chord: ct, chordbpm: chordBPM});
+						playnote(datanote, myUserName, IsSustainOn, IsHarmonyOn, ct, chordBPM);
 						$pressedkey.addClass('active');
 						$pressedkey.parent().addClass('active');
 					}
@@ -349,10 +364,12 @@ $(function(){
 	$('.chordtoggleheaderbuttondiv').click(function(){
 		if($(this).find('input').prop('checked')) {
 			chordType = false;
-			$('#chordtable').slideUp();
+			isChordOn = false;
+			// $('#chordtable').slideUp();
 			$('.chordtoggletablebutton').prop('checked', false).change();
 		} else {
-			$('#chordtable').slideDown();
+			isChordOn = true;
+			// $('#chordtable').slideDown();
 		}
 	});
 
