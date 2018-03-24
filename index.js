@@ -7,7 +7,7 @@ users = [];
 usersplay = [];
 connections = [];
 
-server.listen(process.env.Port || 3000);
+server.listen(process.env.PORT || 3000);
 console.log('server running');
 
 app.use(express.static('src'));
