@@ -98,15 +98,11 @@ $(function(){
 		}
 
 		var chordarr = [firstharmony, secondharmony];
-		console.log(chordarr);
 		return chordarr;
 	}
 
 	function clearAllIntervals() {
-		console.log("clearAllIntervals called.");
-		console.log(intervalArr);
 		for(i = 0; i < intervalArr.length; ++i) {
-			console.log("interval is about to be cleared. : " + intervalArr[i]);
 			clearInterval(intervalArr[i]);
 		}
 		intervalArr = []
